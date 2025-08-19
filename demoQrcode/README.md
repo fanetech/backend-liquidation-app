@@ -67,7 +67,7 @@ Content-Type: application/json
 
 ### 3. Accéder aux ressources protégées
 
-**GET** `http://localhost:8080/api/products`
+**GET** `http://localhost:8080/api/customers`
 
 **Headers:**
 ```
@@ -83,8 +83,12 @@ Authorization: Bearer {token_from_login}
 
 - `POST /api/auth/register` - Inscription
 - `POST /api/auth/login` - Connexion
-- `GET /api/products` - Liste des produits (authentifié)
-- `POST /api/products` - Créer un produit (authentifié)
+- `GET /api/customers` - Liste paginée des clients (authentifié)
+- `GET /api/customers/{id}` - Détail client (authentifié)
+- `GET /api/customers/search?q=term&page=0&size=10` - Recherche + pagination (authentifié)
+- `POST /api/customers` - Créer un client (ROLE_ADMIN)
+- `PUT /api/customers/{id}` - Mettre à jour un client (ROLE_ADMIN)
+- `DELETE /api/customers/{id}` - Supprimer un client (ROLE_ADMIN)
 
 ## Résolution des erreurs 401
 

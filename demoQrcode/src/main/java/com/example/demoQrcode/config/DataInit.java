@@ -1,10 +1,10 @@
 package com.example.demoQrcode.config;
 
 
-import com.example.demoQrcode.entity.Product;
+import com.example.demoQrcode.entity.Customer;
 import com.example.demoQrcode.entity.Role;
 import com.example.demoQrcode.entity.User;
-import com.example.demoQrcode.repository.ProductRepository;
+import com.example.demoQrcode.repository.CustomerRepository;
 import com.example.demoQrcode.repository.RoleRepository;
 import com.example.demoQrcode.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -21,7 +21,7 @@ public class DataInit {
     @Bean
     CommandLineRunner init(RoleRepository roleRepository,
                            UserRepository userRepository,
-                           ProductRepository productRepository,
+                           CustomerRepository customerRepository,
                            PasswordEncoder passwordEncoder) {
         return args -> {
             // Roles
@@ -55,11 +55,10 @@ public class DataInit {
                 userRepository.save(a);
             }
 
-            // Produits exemples
-            if (productRepository.count() == 0) {
-                productRepository.save(new Product("Clavier", "Clavier mécanique", 45000));
-                productRepository.save(new Product("Souris", "Souris optique", 15000));
-                productRepository.save(new Product("Ecran", "Ecran 24 pouces", 120000));
+            // Clients exemples
+            if (customerRepository.count() == 0) {
+                customerRepository.save(new Customer("DOE", "John", "Cotonou", "IFU123456", "+22997000000", "john.doe@example.com"));
+                customerRepository.save(new Customer("DUPONT", "Alice", "Porto-Novo", "IFU654321", "+22966000000", "alice.dupont@example.com"));
             }
         };
     }
