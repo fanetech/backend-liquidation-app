@@ -1,0 +1,84 @@
+2025-08-21T08:52:15.042Z  INFO 13808 --- [demoQrcode ] [restartedMain] c.e.demoQrcode.DemoQrcodeApplication     : Starting DemoQrcodeApplication using Java 24.0.2 with PID 13808 (C:\Users\hp\Desktop\demoQrcode\target\classes started by hp in C:\Users\hp\Desktop\demoQrcode)
+2025-08-21T08:52:15.057Z  INFO 13808 --- [demoQrcode ] [restartedMain] c.e.demoQrcode.DemoQrcodeApplication     : No active profile set, falling back to 1 default profile: "default"
+2025-08-21T08:52:15.194Z  INFO 13808 --- [demoQrcode ] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-08-21T08:52:15.195Z  INFO 13808 --- [demoQrcode ] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-08-21T08:52:16.672Z  INFO 13808 --- [demoQrcode ] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-21T08:52:16.732Z  INFO 13808 --- [demoQrcode ] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 46 ms. Found 3 JPA repository interfaces.
+2025-08-21T08:52:17.553Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-08-21T08:52:17.585Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-08-21T08:52:17.586Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.43]
+2025-08-21T08:52:17.649Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-08-21T08:52:17.649Z  INFO 13808 --- [demoQrcode ] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2454 ms
+2025-08-21T08:52:17.914Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-21T08:52:17.982Z  INFO 13808 --- [demoQrcode ] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.22.Final
+2025-08-21T08:52:18.031Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-08-21T08:52:18.427Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-21T08:52:18.451Z  INFO 13808 --- [demoQrcode ] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-08-21T08:52:18.720Z  INFO 13808 --- [demoQrcode ] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7fc52955
+2025-08-21T08:52:18.721Z  INFO 13808 --- [demoQrcode ] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-08-21T08:52:18.810Z  INFO 13808 --- [demoQrcode ] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-21T08:52:19.849Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-21T08:52:19.999Z  INFO 13808 --- [demoQrcode ] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-21T08:52:20.444Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-08-21T08:52:21.804Z  WARN 13808 --- [demoQrcode ] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-21T08:52:21.845Z  INFO 13808 --- [demoQrcode ] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-08-21T08:52:21.846Z  WARN 13808 --- [demoQrcode ] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-08-21T08:52:22.565Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://localhost:5432/qr_demo_db'
+2025-08-21T08:52:22.675Z  INFO 13808 --- [demoQrcode ] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-08-21T08:52:22.688Z  INFO 13808 --- [demoQrcode ] [restartedMain] c.e.demoQrcode.DemoQrcodeApplication     : Started DemoQrcodeApplication in 8.56 seconds (process running for 9.447)
+2025-08-21T08:53:40.867Z  INFO 13808 --- [demoQrcode ] [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-21T08:53:40.871Z  INFO 13808 --- [demoQrcode ] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-08-21T08:53:40.882Z  INFO 13808 --- [demoQrcode ] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 11 ms
+2025-08-21T08:53:41.331Z  WARN 13808 --- [demoQrcode ] [http-nio-8080-exec-2] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2025-08-21T09:31:24.071Z  WARN 13808 --- [demoQrcode ] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m1s882ms169µs400ns).
+2025-08-21T09:38:39.262Z  INFO 13808 --- [demoQrcode ] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-08-21T09:38:39.334Z  INFO 13808 --- [demoQrcode ] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-08-21T09:38:39.414Z  INFO 13808 --- [demoQrcode ] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-21T09:38:39.543Z  INFO 13808 --- [demoQrcode ] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-08-21T09:38:39.585Z  INFO 13808 --- [demoQrcode ] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-08-21T09:47:04.790Z  INFO 24928 --- [demoQrcode ] [restartedMain] c.e.demoQrcode.DemoQrcodeApplication     : Starting DemoQrcodeApplication using Java 24.0.2 with PID 24928 (C:\Users\hp\Desktop\demoQrcode\target\classes started by hp in C:\Users\hp\Desktop\demoQrcode)
+2025-08-21T09:47:04.793Z  INFO 24928 --- [demoQrcode ] [restartedMain] c.e.demoQrcode.DemoQrcodeApplication     : No active profile set, falling back to 1 default profile: "default"
+2025-08-21T09:47:04.868Z  INFO 24928 --- [demoQrcode ] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-08-21T09:47:04.868Z  INFO 24928 --- [demoQrcode ] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-08-21T09:47:08.457Z  INFO 24928 --- [demoQrcode ] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-21T09:47:08.523Z  INFO 24928 --- [demoQrcode ] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 55 ms. Found 4 JPA repository interfaces.
+2025-08-21T09:47:09.417Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-08-21T09:47:09.442Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-08-21T09:47:09.442Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.43]
+2025-08-21T09:47:09.494Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-08-21T09:47:09.494Z  INFO 24928 --- [demoQrcode ] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4625 ms
+2025-08-21T09:47:09.740Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-21T09:47:09.837Z  INFO 24928 --- [demoQrcode ] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.22.Final
+2025-08-21T09:47:09.895Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-08-21T09:47:10.362Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-21T09:47:10.407Z  INFO 24928 --- [demoQrcode ] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-08-21T09:47:10.718Z  INFO 24928 --- [demoQrcode ] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@f920a31
+2025-08-21T09:47:10.720Z  INFO 24928 --- [demoQrcode ] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-08-21T09:47:10.835Z  INFO 24928 --- [demoQrcode ] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-21T09:47:11.851Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-21T09:47:12.105Z  INFO 24928 --- [demoQrcode ] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-21T09:47:12.518Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-08-21T09:47:13.485Z  WARN 24928 --- [demoQrcode ] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-21T09:47:13.506Z  INFO 24928 --- [demoQrcode ] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-08-21T09:47:13.507Z  WARN 24928 --- [demoQrcode ] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-08-21T09:47:14.060Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://localhost:5432/qr_demo_db'
+2025-08-21T09:47:14.159Z  INFO 24928 --- [demoQrcode ] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-08-21T09:47:14.167Z  INFO 24928 --- [demoQrcode ] [restartedMain] c.e.demoQrcode.DemoQrcodeApplication     : Started DemoQrcodeApplication in 10.033 seconds (process running for 10.885)
+2025-08-21T10:12:23.844Z  WARN 24928 --- [demoQrcode ] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=14m42s822ms982µs800ns).
