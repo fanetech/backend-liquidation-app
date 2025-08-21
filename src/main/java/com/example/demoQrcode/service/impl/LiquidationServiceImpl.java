@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -88,8 +89,21 @@ public class LiquidationServiceImpl implements LiquidationService {
     }
 
     @Override
-    public Page<Liquidation> search(Long customerId, LiquidationStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        return liquidationRepository.search(customerId, status, startDate, endDate, pageable);
+    public Page<Liquidation> searchWithFilters(Long customerId, LiquidationStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        Specification<Liquidation> spec = Specification.where(null);
+        if (customerId != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("customer").get("id"), customerId));
+        }
+        if (status != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
+        }
+        if (startDate != null) {
+            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("issueDate"), startDate));
+        }
+        if (endDate != null) {
+            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("issueDate"), endDate));
+        }
+        return liquidationRepository.findAll(spec, pageable);
     }
 
     @Override
@@ -116,6 +130,22 @@ public class LiquidationServiceImpl implements LiquidationService {
                 .multiply(dailyRate)
                 .multiply(BigDecimal.valueOf(overdueDays));
         return penalty.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    @Override
+    public Page<Liquidation> searchByTerm(String term, Pageable pageable) {
+        final String like = term == null ? "" : term.trim().toLowerCase();
+        if (like.isEmpty()) {
+            return liquidationRepository.findAll(pageable);
+        }
+        Specification<Liquidation> spec = Specification.where((root, query, cb) -> cb.or(
+                cb.like(cb.lower(root.get("taxType")), "%" + like + "%"),
+                cb.like(cb.lower(root.get("status").as(String.class)), "%" + like + "%"),
+                cb.like(cb.lower(root.get("customer").get("firstName")), "%" + like + "%"),
+                cb.like(cb.lower(root.get("customer").get("lastName")), "%" + like + "%"),
+                cb.like(cb.lower(root.get("customer").get("ifu")), "%" + like + "%")
+        ));
+        return liquidationRepository.findAll(spec, pageable);
     }
 }
 

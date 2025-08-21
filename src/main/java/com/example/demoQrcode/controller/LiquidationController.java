@@ -37,7 +37,18 @@ public class LiquidationController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        return liquidationService.search(customerId, status, startDate, endDate, pageable);
+        return liquidationService.searchWithFilters(customerId, status, startDate, endDate, pageable);
+    }
+
+    // GET /api/liquidations/search?q={term}
+    @GetMapping("/search")
+    public Page<Liquidation> searchByTerm(
+            @RequestParam(name = "q", required = false, defaultValue = "") String term,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return liquidationService.searchByTerm(term, pageable);
     }
 
     // GET /api/liquidations/{id}
