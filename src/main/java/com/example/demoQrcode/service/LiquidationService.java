@@ -22,11 +22,13 @@ public interface LiquidationService {
 
     Optional<Liquidation> markAsPaid(Long id);
 
-    Page<Liquidation> search(Long customerId, LiquidationStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable);
+    Page<Liquidation> searchWithFilters(Long customerId, LiquidationStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
     List<Liquidation> findByCustomer(Long customerId);
 
     BigDecimal calculatePenalty(Liquidation liquidation, BigDecimal dailyRate);
+
+    Page<Liquidation> searchByTerm(String term, Pageable pageable);
 }
 
 
