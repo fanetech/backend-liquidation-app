@@ -1,0 +1,73 @@
+spring:
+  application:
+    name: demoQrcode-test
+  
+  # --- DATABASE CONFIG POUR TESTS ---
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  
+  # --- JPA & HIBERNATE ---
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  
+  # --- H2 CONSOLE (tests uniquement) ---
+  h2:
+    console:
+      enabled: true
+
+# --- JWT CONFIG ---
+jwt:
+  secret: testSecretKey1234567890123456789012345678901234567890
+  expiration: 3600000
+
+# --- SERVER ---
+server:
+  port: 0
+
+logging:
+  level:
+    root: WARN
+    com.example.demoQrcode: DEBUG
+    com.aveplus.uemoa: DEBUG
+
+# --- UEMOA QR CODE CONFIGURATION ---
+uemoa:
+  qr:
+    # Configuration par défaut pour l'UEMOA
+    country-code: CI
+    currency: XOF
+    merchant-category-code: 0000
+    merchant-name: "LIQUIDATION APP"
+    merchant-city: "Abidjan"
+    merchant-postal-code: "225"
+    merchant-country: "CI"
+    
+    # Configuration du système de paiement
+    payment-system:
+      identifier: "int.bceao.pi"
+      name: "BCEAO Payment Interface"
+    
+    # Configuration des montants par défaut
+    default-amount: 100
+    min-amount: 1
+    max-amount: 999999
+    
+    # Configuration des QR codes
+    qr:
+      size: 300
+      format: "PNG"
+      error-correction: "M"
+      
+    # Configuration des tests
+    test:
+      enabled: true
+      merchant-id: "test-123"
+      terminal-id: "test-terminal"
