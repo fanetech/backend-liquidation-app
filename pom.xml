@@ -102,7 +102,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- UEMOA QR Code Payment Module -->
 		<dependency>
 			<groupId>com.aveplus</groupId>
