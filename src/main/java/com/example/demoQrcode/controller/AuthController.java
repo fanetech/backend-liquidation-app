@@ -8,6 +8,7 @@ import com.example.demoQrcode.entity.User;
 import com.example.demoQrcode.repository.RoleRepository;
 import com.example.demoQrcode.repository.UserRepository;
 import com.example.demoQrcode.security.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -68,6 +70,7 @@ public class AuthController {
 					.map(u -> u.getRoles().stream().anyMatch(r -> "ROLE_ADMIN".equals(r.getName())) ? "ADMIN" : "USER")
 					.orElse("USER");
 			String redirect = "ADMIN".equals(role) ? "/admin" : "/user";
+			log.info("token => {}", token);
 
 			return ResponseEntity.ok()
 					.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)

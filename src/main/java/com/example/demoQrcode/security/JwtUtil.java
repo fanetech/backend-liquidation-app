@@ -30,17 +30,24 @@ public class JwtUtil {
     public void checkSecret() {
         if (secret == null || secret.isEmpty()) {
             System.err.println("❌ ERREUR : La clé secrète JWT est vide ou nulle !");
-        } else {
-            String preview = secret.length() > 10 ? secret.substring(0,10) + "..." : secret;
-            System.out.println("🔑 Clé JWT chargée (prefix): " + preview);
-        }
-
-        if (secret != null && secret.length() < 32) {
-            System.out.println("⚠️ WARNING: jwt.secret is short (<32). Use a longer secret for better security.");
+            throw new IllegalStateException("JWT secret key cannot be null or empty");
         }
         
+        // For HS512, we need at least 512 bits (64 bytes)
+        int requiredBytes = 64;
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        
+        if (keyBytes.length < requiredBytes) {
+            System.err.println("❌ ERREUR : La clé JWT est trop courte. Taille actuelle: " + keyBytes.length + " bytes, requis: " + requiredBytes + " bytes");
+            System.err.println("💡 Conseil : Utilisez une clé d'au moins 64 caractères pour HS512");
+            throw new IllegalStateException("JWT secret key is too short for HS512. Current size: " + (keyBytes.length * 8) + " bits, required: 512 bits");
+        }
+        
+        String preview = secret.length() > 10 ? secret.substring(0,10) + "..." : secret;
+        System.out.println("✅ Clé JWT chargée avec succès (" + keyBytes.length + " bytes, prefix: " + preview + ")");
+        
         // Initialiser la clé secrète
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(String username) {
