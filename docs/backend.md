@@ -634,21 +634,3 @@ logging.level.com.example.demoQrcode=DEBUG
 logging.level.org.hibernate.SQL=DEBUG
 logging.level.org.springframework.security=DEBUG
 logging.file.name=logs/demoqrcode.log
-```
-
-## Performance Considerations
-
-1. **Database Indexing**: Strategic indexes on frequently queried fields
-2. **Connection Pooling**: HikariCP for efficient database connections
-3. **Lazy Loading**: JPA lazy loading for related entities
-4. **Pagination**: Server-side pagination for large result sets
-5. **Caching**: Application-level caching for reference data
-6. **Async Processing**: Asynchronous QR code generation
-7. **Query Optimization**: Efficient JPQL/HQL queries
-
-## Monitoring & Health Checks
-
-- Spring Boot Actuator endpoints for health monitoring
-- Custom health indicators for UEMOA integration
-- Application metrics and performance monitoring
-- Database connection health checks

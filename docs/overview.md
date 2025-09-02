@@ -1,97 +1,204 @@
-# Liquidation App - Project Overview
+# Backend - Liquidation App API
 
-## Description
+## Overview
 
-The Liquidation App is a comprehensive full-stack application designed for managing customer liquidations with integrated QR code payment functionality compliant with UEMOA (West African Economic and Monetary Union) standards. The system provides a secure platform for administrators to manage customers and their liquidation processes, while generating QR codes for seamless payment transactions.
+The backend is a robust Spring Boot REST API that provides comprehensive server-side functionality for the Liquidation App. It handles customer management, liquidation processing, QR code generation, and integrates with UEMOA payment standards for BCEAO compliance.
 
 ## Key Features
 
-- **User Authentication & Authorization**: JWT-based secure authentication with role-based access control (Admin/User roles)
-- **Customer Management**: Complete CRUD operations for customer data management
-- **Liquidation Management**: Full lifecycle management of liquidation processes with QR code generation
-- **UEMOA QR Code Integration**: Compliant QR code generation for payments according to BCEAO standards
-- **Multi-type QR Support**: Static, Dynamic, P2P, and Penalty QR codes
-- **RESTful API**: Well-documented API endpoints for all operations
-- **Modern Web Interface**: Responsive React frontend with Bootstrap UI components
-- **Database Integration**: PostgreSQL with automated migrations
-- **Security**: Comprehensive security configuration with CORS, CSRF protection, and input validation
+- **RESTful API**: Complete REST API with 30+ endpoints
+- **JWT Authentication**: Secure stateless authentication with role-based access
+- **Customer Management**: Full CRUD operations for customer data
+- **Liquidation Processing**: Complete lifecycle management with QR integration
+- **UEMOA QR Generation**: BCEAO-compliant QR codes (Static, Dynamic, P2P, Penalty)
+- **Database Integration**: PostgreSQL with JPA/Hibernate and Flyway migrations
+- **Security Layer**: Spring Security with CORS, CSRF protection, and validation
+- **Error Handling**: Comprehensive exception handling with custom responses
+- **Data Validation**: Bean validation with detailed error messages
 
 ## Technology Stack
 
-### Backend
-- **Java 17**: Modern Java runtime
-- **Spring Boot 3.4.8**: Framework for rapid application development
-- **Spring Security**: Authentication and authorization
-- **Spring Data JPA**: Data persistence layer
-- **PostgreSQL**: Primary database
-- **H2 Database**: In-memory database for testing
-- **JWT (JSON Web Tokens)**: Stateless authentication
-- **Maven**: Build and dependency management
-- **Lombok**: Code generation library
+- **Java 17**: Modern Java runtime with LTS support
+- **Spring Boot 3.4.8**: Production-ready framework with auto-configuration
+- **Spring Security 6.x**: Authentication and authorization framework
+- **Spring Data JPA 3.x**: Data persistence and ORM layer
+- **PostgreSQL 12+**: Primary production database
+- **H2 Database**: In-memory database for testing and development
+- **JWT (JSON Web Tokens)**: Stateless authentication tokens
+- **Maven 3.6+**: Build automation and dependency management
+- **Lombok**: Code generation to reduce boilerplate
 
-### Frontend
-- **React 19.1.1**: Modern JavaScript library for UI
-- **Vite**: Fast build tool and development server
-- **Bootstrap 5.3.7**: Responsive CSS framework
-- **Axios**: HTTP client for API communication
-- **React Router DOM**: Client-side routing
-- **React Hook Form**: Form management
-- **Yup**: Form validation
-- **React Toastify**: Notification system
-- **QRCode.react**: QR code generation and display
+## API Architecture
 
-## Business Context
-
-This application serves organizations that need to:
-- Manage customer information and liquidation processes
-- Generate secure QR codes for payment collection
-- Ensure compliance with regional payment standards (UEMOA)
-- Provide both administrative and user interfaces
-- Maintain audit trails and transaction records
-
-## Project Structure
+### Core Components
 
 ```
-liquidation-app/
-├── backend-liquidation-app/          # Spring Boot backend
-│   ├── src/main/java/com/example/demoQrcode/
-│   │   ├── controller/               # REST API endpoints
-│   │   ├── entity/                   # JPA entities
-│   │   ├── service/                  # Business logic
-│   │   ├── security/                 # Security configuration
-│   │   └── config/                   # Application configuration
-│   └── src/main/resources/           # Configuration files
-├── frontend-liquidation-app/         # React frontend
-│   ├── src/
-│   │   ├── components/               # React components
-│   │   ├── services/                 # API service layer
-│   │   └── assets/                   # Static assets
-│   └── public/                       # Public assets
-└── docs/                             # Documentation
+DemoQrcodeApplication (Main Class)
+├── Configuration Layer
+│   ├── SecurityConfig (JWT, CORS, Roles)
+│   ├── CorsConfig (Cross-origin settings)
+│   ├── UemoaConfig (Payment standards)
+│   └── DataInit (Database initialization)
+├── Controller Layer (REST Endpoints)
+│   ├── AuthController (Authentication)
+│   ├── CustomerController (Customer CRUD)
+│   ├── LiquidationController (Liquidation management)
+│   ├── LiquidationQRController (QR generation)
+│   └── UemoaQRController (UEMOA integration)
+├── Service Layer (Business Logic)
+│   ├── CustomerService (Customer operations)
+│   ├── LiquidationService (Liquidation processing)
+│   ├── LiquidationQRService (QR generation)
+│   └── UemoaQRIntegrationService (BCEAO compliance)
+├── Repository Layer (Data Access)
+│   ├── CustomerRepository
+│   ├── LiquidationRepository
+│   ├── UserRepository
+│   └── RoleRepository
+└── Entity Layer (Domain Models)
+    ├── Customer (Customer data)
+    ├── Liquidation (Liquidation records)
+    ├── User (Authentication)
+    └── Role (Authorization)
 ```
+
+### Security Implementation
+
+- **JWT Authentication**: Stateless token-based security
+- **Role-based Access**: Admin/User permission system
+- **CORS Configuration**: Configurable cross-origin policies
+- **Input Validation**: Comprehensive data validation
+- **Password Security**: BCrypt password hashing
+
+## Database Design
+
+### Core Tables
+
+- **customers**: Customer information with IFU tax IDs
+- **liquidations**: Liquidation records with QR code data
+- **users**: System users with authentication data
+- **roles**: User roles for authorization
+- **user_roles**: Many-to-many relationship table
+
+### Key Relationships
+
+```
+Customer (1) ────► Liquidation (N)
+User (N) ────► UserRole (N) ◄──── (N) Role
+```
+
+## UEMOA Integration
+
+### QR Code Types
+
+1. **Static QR**: Fixed amount payments
+2. **Dynamic QR**: Variable amount payments
+3. **P2P QR**: Person-to-person transfers
+4. **Penalty QR**: Penalty payment processing
+
+### BCEAO Compliance
+
+- **Currency**: XOF (West African CFA franc)
+- **Country Code**: CI (Côte d'Ivoire) - configurable
+- **Merchant Information**: Configurable merchant details
+- **Payment Standards**: EMVCo compliant QR format
 
 ## Development Status
 
-The application is in active development with:
-- ✅ Core authentication system
-- ✅ Customer management functionality
-- ✅ Basic liquidation management
-- ✅ QR code generation (UEMOA compliant)
-- ✅ RESTful API implementation
-- ✅ React frontend with routing
-- ✅ Database integration with migrations
-- 🔄 Testing suite (in progress)
-- 🔄 Advanced features (planned)
+### Completed Features
+- ✅ JWT authentication and authorization
+- ✅ Customer CRUD operations with validation
+- ✅ Liquidation management with status tracking
+- ✅ UEMOA QR code generation (all types)
+- ✅ PostgreSQL integration with migrations
+- ✅ Comprehensive API documentation
+- ✅ Error handling and logging
+- ✅ Security configuration and CORS
+- ✅ Data validation and constraints
 
-## Target Users
+### Current Focus
+- 🔄 API performance optimization
+- 🔄 Advanced filtering and search
+- 🔄 Bulk operations support
+- 🔄 Enhanced error responses
+- 🔄 API versioning strategy
 
-1. **Administrators**: Full access to all features including customer and liquidation management
-2. **Users**: Limited access for viewing relevant information
-3. **Integration Partners**: API access for third-party integrations
+## API Endpoints
+
+### Authentication (5 endpoints)
+- `POST /api/auth/login` - User authentication
+- `POST /api/auth/register/user` - User registration
+- `POST /api/auth/register/admin` - Admin registration
+
+### Customer Management (6 endpoints)
+- `GET /api/customers` - List customers (paginated)
+- `GET /api/customers/{id}` - Get customer by ID
+- `POST /api/customers` - Create customer (Admin)
+- `PUT /api/customers/{id}` - Update customer (Admin)
+- `DELETE /api/customers/{id}` - Delete customer (Admin)
+- `GET /api/customers/search` - Search customers
+
+### Liquidation Management (12 endpoints)
+- `GET /api/liquidations` - List liquidations
+- `GET /api/liquidations/{id}` - Get liquidation by ID
+- `POST /api/liquidations` - Create liquidation (Admin)
+- `PUT /api/liquidations/{id}` - Update liquidation (Admin)
+- `DELETE /api/liquidations/{id}` - Delete liquidation (Admin)
+- `POST /api/liquidations/{id}/generate-qr` - Generate QR code
+- `GET /api/liquidations/{id}/qr-image` - Get QR image
+- Plus additional endpoints for filtering and statistics
+
+### QR Code Operations (8 endpoints)
+- Static, Dynamic, P2P, and Penalty QR generation
+- QR validation and reference data
+- UEMOA-specific operations
+
+## Configuration
+
+### Environment Variables
+
+```bash
+JWT_SECRET=myVerySecureSecretKey...  # 256-bit key required
+DB_HOST=localhost                     # Database host
+DB_PORT=5432                         # Database port
+DB_NAME=qr_demo_db                   # Database name
+DB_USERNAME=qr_user                  # Database user
+DB_PASSWORD=your_password            # Database password
+```
+
+### Application Properties
+
+```properties
+# Server
+server.port=8080
+server.servlet.context-path=/api
+
+# Database
+spring.datasource.url=jdbc:postgresql://localhost:5432/qr_demo_db
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+
+# JWT
+jwt.secret=${JWT_SECRET}
+jwt.expiration=3600000
+
+# UEMOA
+uemoa.qr.country-code=CI
+uemoa.qr.currency=XOF
+uemoa.qr.merchant-name=Liquidation App
+```
+
+## Target Environment
+
+- **Production**: Linux servers with PostgreSQL
+- **Development**: Local development with H2 database
+- **Testing**: Automated tests with test containers
+- **CI/CD**: Maven-based build pipeline
 
 ## Compliance & Standards
 
-- **UEMOA Standards**: Compliant with West African payment standards
-- **BCEAO Guidelines**: Adheres to Central Bank of West African States requirements
-- **EMVCo Standards**: QR code format compliance
-- **Security Best Practices**: Industry-standard security implementations
+- **UEMOA Standards**: West African Economic and Monetary Union compliance
+- **BCEAO Guidelines**: Central Bank of West African States requirements
+- **EMVCo Standards**: Global QR code payment standards
+- **REST API Standards**: Proper HTTP methods and status codes
+- **Security Best Practices**: OWASP guidelines implementation

@@ -4,338 +4,431 @@
 
 The Liquidation App follows a modern layered architecture pattern with clear separation of concerns, ensuring maintainability, scalability, and testability.
 
-```mermaid
-graph TB
-    subgraph "Client Layer"
-        A[React Frontend<br/>Vite + Bootstrap]
-    end
+### Architecture Layers
 
-    subgraph "API Gateway Layer"
-        B[Spring Boot REST API<br/>Controllers]
-    end
+```
+┌─────────────────────────────────────┐
+│         Client Layer                │
+│   React Frontend + Vite + Bootstrap │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│      API Gateway Layer              │
+│  Spring Boot REST API + Controllers │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│     Business Logic Layer            │
+│   Service Layer + Business Rules    │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│      Data Access Layer              │
+│   Repository Layer + JPA/Hibernate  │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│         Database                    │
+│         PostgreSQL                  │
+└─────────────────────────────────────┘
+```
 
-    subgraph "Business Logic Layer"
-        C[Service Layer<br/>Business Rules & Logic]
-    end
+### Security & External Systems
 
-    subgraph "Data Access Layer"
-        D[Repository Layer<br/>JPA/Hibernate]
-    end
+```
+┌─────────────────────────────────────┐     ┌─────────────────────────────────────┐
+│        Security Layer               │     │      External Systems             │
+│   JWT Authentication + Spring       │     │   UEMOA QR Module + BCEAO        │
+│   Security + Role-based Access      │     │   Integration + PostgreSQL       │
+└─────────────────────────────────────┘     └─────────────────────────────────────┘
+                ▲                                       ▲
+                │                                       │
+                └───────────────────────────────────────┘
+                        Security protects all layers
+```
 
-    subgraph "Security Layer"
-        E[JWT Authentication<br/>Spring Security]
-    end
+### Data Flow
 
-    subgraph "External Systems"
-        F[UEMOA QR Module<br/>BCEAO Integration]
-        G[PostgreSQL Database]
-    end
-
-    A --> B
-    B --> C
-    B --> E
-    C --> D
-    C --> F
-    D --> G
-    E --> G
-
-    style A fill:#e1f5fe
-    style B fill:#f3e5f5
-    style C fill:#e8f5e8
-    style D fill:#fff3e0
-    style E fill:#ffebee
-    style F fill:#f3e5f5
-    style G fill:#e0f2f1
+```
+User Action → Client Layer → API Gateway → Business Logic → Data Access → Database
+                    ▲              ▲              ▲             ▲
+                    │              │              │             │
+                    └──────────────┼──────────────┼─────────────┘
+                                   │              │
+                                   └──────────────┘
+                                   Security Layer
 ```
 
 ## Component Architecture
 
 ### Frontend Architecture
 
-```mermaid
-graph TD
-    subgraph "React Application"
-        H[App.jsx<br/>Main Component]
-        I[Router<br/>React Router DOM]
-        J[Components<br/>UI Components]
-        K[Services<br/>API Services]
-        L[Context/Store<br/>State Management]
-    end
+**React Application Structure:**
 
-    subgraph "Key Components"
-        M[Login/Register<br/>Authentication]
-        N[Dashboard<br/>Main Interface]
-        O[Customer Management<br/>CRUD Operations]
-        P[Liquidation Management<br/>QR Generation]
-        Q[QR Code Display<br/>Payment Interface]
-    end
+```
+┌─────────────────────────────────────┐
+│           App.jsx                   │
+│   Main component + routing + layout │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│         React Router DOM            │
+│     Client-side routing system      │
+└─────────────────────────────────────┘
+                │
+       ┌────────┴────────┐
+       ▼                 ▼
+┌─────────────┐    ┌─────────────┐
+│ Components  │    │  Services   │
+│ UI elements │    │ API calls   │
+└─────────────┘    └─────────────┘
+       │                 │
+       └────────┬────────┘
+                ▼
+┌─────────────────────────────────────┐
+│       State Management             │
+│   React Hooks + Context API        │
+└─────────────────────────────────────┘
+```
 
-    H --> I
-    I --> J
-    J --> K
-    J --> L
-    J --> M
-    J --> N
-    J --> O
-    J --> P
-    J --> Q
+**Key Components:**
 
-    style H fill:#e3f2fd
-    style I fill:#f3e5f5
-    style J fill:#e8f5e8
-    style K fill:#fff3e0
-    style L fill:#ffebee
+```
+Authentication Components:
+├── Login.jsx          - User authentication
+├── Register.jsx       - User registration
+└── ProtectedRoute.jsx - Route protection
+
+Customer Management:
+├── CustomersPage.jsx     - Customer list & search
+├── CustomerModals.jsx    - CRUD operations
+└── Customer forms        - Create/Edit forms
+
+Liquidation Management:
+├── LiquidationsPage.jsx  - Liquidation dashboard
+├── LiquidationDetail.jsx - Detailed view
+├── LiquidationModals.jsx - CRUD operations
+└── QRCodeDisplay.jsx     - QR code interface
+
+Administrative:
+├── Admin.jsx             - Admin dashboard
+├── Home.jsx              - Landing page
+└── QRCodeDemo.jsx        - Demo component
 ```
 
 ### Backend Architecture
 
-```mermaid
-graph TD
-    subgraph "Spring Boot Application"
-        R[Main Application<br/>DemoQrcodeApplication]
-        S[Configuration<br/>Security, CORS, DB]
-        T[Controllers<br/>REST Endpoints]
-        U[Services<br/>Business Logic]
-        V[Repositories<br/>Data Access]
-        W[Entities<br/>Domain Models]
-        X[DTOs<br/>Data Transfer Objects]
-    end
+**Spring Boot Application Structure:**
 
-    subgraph "Security Components"
-        Y[JWT Util<br/>Token Management]
-        Z[Security Config<br/>Auth Filters]
-        AA[User Details Service<br/>Authentication]
-    end
+```
+┌─────────────────────────────────────┐
+│    DemoQrcodeApplication.java       │
+│       Main Application Class        │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│        Configuration Layer          │
+│ Security + CORS + Database + UEMOA  │
+└─────────────────────────────────────┘
+                │
+       ┌────────┴────────┐
+       ▼                 ▼
+┌─────────────┐    ┌─────────────┐
+│ Controllers │    │  Services   │
+│ REST APIs   │    │ Business    │
+│ Endpoints   │    │ Logic       │
+└─────────────┘    └─────────────┘
+       │                 │
+       └────────┬────────┘
+                ▼
+┌─────────────────────────────────────┐
+│       Data Access Layer             │
+│ Repositories + Entities + DTOs      │
+└─────────────────────────────────────┘
+```
 
-    subgraph "UEMOA Integration"
-        BB[UEMOA QR Service<br/>QR Generation]
-        CC[UEMOA Config<br/>Payment Settings]
-        DD[QR Controllers<br/>Payment Endpoints]
-    end
+**Security Components:**
 
-    R --> S
-    S --> T
-    T --> U
-    U --> V
-    V --> W
-    T --> X
-    S --> Y
-    S --> Z
-    S --> AA
-    U --> BB
-    BB --> CC
-    T --> DD
+```
+┌─────────────────────────────────────┐
+│       Security Components           │
+├─────────────────────────────────────┤
+│ JWT Util: Token generation &        │
+│ validation                          │
+│                                     │
+│ Security Config: Authentication     │
+│ filters & configuration             │
+│                                     │
+│ User Details Service: User auth     │
+│ & role management                   │
+└─────────────────────────────────────┘
+```
 
-    style R fill:#e3f2fd
-    style S fill:#f3e5f5
-    style T fill:#e8f5e8
-    style U fill:#fff3e0
-    style V fill:#ffebee
-    style W fill:#fce4ec
-    style X fill:#e0f2f1
+**UEMOA Integration:**
+
+```
+┌─────────────────────────────────────┐
+│     UEMOA Integration Layer         │
+├─────────────────────────────────────┤
+│ UEMOA QR Service: QR generation     │
+│ & validation                        │
+│                                     │
+│ UEMOA Config: Payment settings      │
+│ & BCEAO compliance                  │
+│                                     │
+│ QR Controllers: Payment endpoints   │
+└─────────────────────────────────────┘
 ```
 
 ## Data Flow Architecture
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-    participant UEMOA
+**User Interaction Flow:**
+1. User performs action (login, CRUD operation) in Frontend
+2. Frontend sends HTTP request with JWT token to Backend
+3. Backend validates JWT token
+4. Backend queries/updates data in Database
+5. Database returns data response to Backend
+6. Backend processes business logic
+7. If QR generation needed, Backend calls UEMOA service
+8. UEMOA service returns QR data/image
+9. Backend sends JSON response to Frontend
+10. Frontend updates UI for user
 
-    User->>Frontend: User Action (Login/CRUD)
-    Frontend->>Backend: HTTP Request + JWT
-    Backend->>Backend: Validate JWT
-    Backend->>Database: Query/Update Data
-    Database-->>Backend: Data Response
-    Backend->>Backend: Business Logic Processing
-    Backend->>UEMOA: QR Code Generation (if needed)
-    UEMOA-->>Backend: QR Data/Image
-    Backend-->>Frontend: JSON Response
-    Frontend-->>User: UI Update
-
-    Note over Backend,UEMOA: QR Generation Flow
-```
+**QR Generation Flow:** Backend processes QR generation through UEMOA integration
 
 ## Database Schema
 
-```mermaid
-erDiagram
-    CUSTOMER ||--o{ LIQUIDATION : has
-    USER ||--o{ USER_ROLES : has
-    ROLE ||--o{ USER_ROLES : assigned
+### Core Tables
 
-    CUSTOMER {
-        bigint id PK
-        varchar last_name
-        varchar first_name
-        varchar address
-        varchar ifu
-        varchar phone
-        varchar email
-        timestamp created_at
-        timestamp updated_at
-    }
+```
+┌─────────────────────────────────────┐
+│         CUSTOMER Table              │
+├─────────────────────────────────────┤
+│ id (PK)           BIGINT            │
+│ last_name         VARCHAR(100)      │
+│ first_name        VARCHAR(100)      │
+│ address           VARCHAR(255)      │
+│ ifu               VARCHAR(50)       │
+│ phone             VARCHAR(20)       │
+│ email             VARCHAR(100) UNI  │
+│ created_at        TIMESTAMP         │
+│ updated_at        TIMESTAMP         │
+└─────────────────────────────────────┘
+                    │
+                    │ 1:N
+                    ▼
+┌─────────────────────────────────────┐
+│       LIQUIDATION Table             │
+├─────────────────────────────────────┤
+│ id (PK)           BIGINT            │
+│ customer_id (FK)  BIGINT            │
+│ amount            DECIMAL(18,2)     │
+│ status            VARCHAR(20)       │
+│ qr_code_data      TEXT              │
+│ qr_image_base64   TEXT              │
+│ merchant_channel  VARCHAR(64)       │
+│ transaction_id    VARCHAR(128)      │
+│ qr_type           VARCHAR(16)       │
+│ qr_generated_at   TIMESTAMP         │
+│ penalty_amount    DECIMAL(18,2)     │
+│ total_amount      DECIMAL(18,2)     │
+│ created_at        TIMESTAMP         │
+│ updated_at        TIMESTAMP         │
+└─────────────────────────────────────┘
+```
 
-    LIQUIDATION {
-        bigint id PK
-        bigint customer_id FK
-        decimal amount
-        varchar status
-        text qr_code_data
-        text qr_image_base64
-        varchar merchant_channel
-        varchar transaction_id
-        varchar qr_type
-        timestamp qr_generated_at
-        decimal penalty_amount
-        decimal total_amount
-        timestamp created_at
-        timestamp updated_at
-    }
+```
+┌─────────────────────────────────────┐
+│          USER Table                 │
+├─────────────────────────────────────┤
+│ id (PK)           BIGINT            │
+│ username          VARCHAR(50) UNI   │
+│ password          VARCHAR(255)      │
+│ email             VARCHAR(100)      │
+│ created_at        TIMESTAMP         │
+└─────────────────────────────────────┘
+                    │
+                    │ N:M
+                    ▼
+┌─────────────────────────────────────┐
+│       USER_ROLES Table              │
+├─────────────────────────────────────┤
+│ user_id (FK)      BIGINT            │
+│ role_id (FK)      BIGINT            │
+└─────────────────────────────────────┘
+                    ▲
+                    │ N:M
+┌─────────────────────────────────────┐
+│          ROLE Table                 │
+├─────────────────────────────────────┤
+│ id (PK)           BIGINT            │
+│ name              VARCHAR(50) UNI   │
+└─────────────────────────────────────┘
+```
 
-    USER {
-        bigint id PK
-        varchar username
-        varchar password
-        varchar email
-        timestamp created_at
-    }
+### Relationships
 
-    ROLE {
-        bigint id PK
-        varchar name
-    }
+```
+CUSTOMER ────1:N────► LIQUIDATION
+   ▲                      │
+   │                      │
+   └───────references─────┘
 
-    USER_ROLES {
-        bigint user_id FK
-        bigint role_id FK
-    }
+USER ────N:M────► USER_ROLES ◄────N:M──── ROLE
 ```
 
 ## Security Architecture
 
-```mermaid
-graph TD
-    subgraph "Authentication Flow"
-        AAA[Client Request] --> BBB{JWT Present?}
-        BBB -->|No| CCC[401 Unauthorized]
-        BBB -->|Yes| DDD[Validate JWT]
-        DDD -->|Invalid| CCC
-        DDD -->|Valid| EEE[Extract User Info]
-        EEE --> FFF{Check Roles}
-        FFF -->|Insufficient| GGG[403 Forbidden]
-        FFF -->|Authorized| HHH[Process Request]
-    end
+### Authentication Flow
 
-    subgraph "Security Components"
-        III[Spring Security]
-        JJJ[JWT Authentication Filter]
-        KKK[UserDetailsService]
-        LLL[Password Encoder]
-        MMM[CORS Configuration]
-    end
-
-    III --> JJJ
-    III --> KKK
-    III --> LLL
-    III --> MMM
-
-    style AAA fill:#e3f2fd
-    style CCC fill:#ffebee
-    style GGG fill:#ffebee
-    style HHH fill:#e8f5e8
+```
+┌─────────────────┐
+│   Client Request│
+│  (with JWT)     │
+└─────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│ JWT Token       │
+│ Present?        │
+└─────────────────┘
+         │
+    ┌────┴────┐
+    │         │
+┌───▼──┐  ┌───▼──┐
+│  No   │  │ Yes  │
+│ 401   │  │Validate│
+│Unauthorized││JWT     │
+└────────┘  └────────┘
+               │
+               ▼
+┌─────────────────┐
+│ JWT Valid?      │
+└─────────────────┘
+         │
+    ┌────┴────┐
+    │         │
+┌───▼──┐  ┌───▼──┐
+│Invalid│  │Valid │
+│ 401   │  │Extract│
+│Unauthorized││User Info│
+└────────┘  └────────┘
+               │
+               ▼
+┌─────────────────┐
+│ Check Roles &   │
+│ Permissions     │
+└─────────────────┘
+         │
+    ┌────┴────┐
+    │         │
+┌───▼──┐  ┌───▼──┐
+│Insufficient││Authorized│
+│ 403 Forbidden││Process   │
+│             ││Request    │
+└─────────────┘└───────────┘
 ```
 
-## Deployment Architecture
+### Security Components
 
-```mermaid
-graph TD
-    subgraph "Production Environment"
-        NNN[Load Balancer<br/>Nginx/HAProxy]
-        OOO[Application Server 1<br/>Spring Boot]
-        PPP[Application Server 2<br/>Spring Boot]
-        QQQ[Database Server<br/>PostgreSQL]
-        RRR[File Storage<br/>For QR Images]
-    end
-
-    subgraph "Development Environment"
-        SSS[Local Development<br/>IDE + Vite Dev Server]
-        TTT[H2 Database<br/>In-Memory]
-    end
-
-    NNN --> OOO
-    NNN --> PPP
-    OOO --> QQQ
-    PPP --> QQQ
-    OOO --> RRR
-    PPP --> RRR
-
-    SSS --> TTT
-
-    style NNN fill:#e3f2fd
-    style OOO fill:#e8f5e8
-    style PPP fill:#e8f5e8
-    style QQQ fill:#fff3e0
-    style SSS fill:#f3e5f5
+```
+┌─────────────────────────────────────┐
+│       Security Framework            │
+├─────────────────────────────────────┤
+│                                    │
+│  ┌─────────────────────────────────┐ │
+│  │     Spring Security             │ │
+│  │   Main security framework       │ │
+│  └─────────────────────────────────┘ │
+│                                    │
+│  ┌─────────────────────────────────┐ │
+│  │  JWT Authentication Filter      │ │
+│  │  Intercepts & validates requests│ │
+│  └─────────────────────────────────┘ │
+│                                    │
+│  ┌─────────────────────────────────┐ │
+│  │     UserDetailsService          │ │
+│  │  Loads user details for auth    │ │
+│  └─────────────────────────────────┘ │
+│                                    │
+│  ┌─────────────────────────────────┐ │
+│  │     Password Encoder            │ │
+│  │  Secure password hashing        │ │
+│  └─────────────────────────────────┘ │
+│                                    │
+│  ┌─────────────────────────────────┐ │
+│  │    CORS Configuration           │ │
+│  │ Cross-origin resource sharing   │ │
+│  └─────────────────────────────────┘ │
+│                                    │
+└─────────────────────────────────────┘
 ```
 
 ## Technology Stack Details
 
 ### Backend Technologies
-- **Framework**: Spring Boot 3.4.8
-- **Language**: Java 17
-- **Security**: Spring Security + JWT
-- **Database**: PostgreSQL (Production), H2 (Testing)
-- **Build Tool**: Maven
-- **ORM**: Hibernate/JPA
-- **Validation**: Bean Validation
-- **Documentation**: SpringDoc OpenAPI
+
+```
+┌─────────────────────────────────────┐
+│        Backend Stack                │
+├─────────────────────────────────────┤
+│ Framework:    Spring Boot 3.4.8     │
+│ Language:     Java 17               │
+│ Security:     Spring Security + JWT │
+│ Database:     PostgreSQL + H2       │
+│ Build:        Maven                 │
+│ ORM:          Hibernate/JPA         │
+│ Validation:   Bean Validation       │
+└─────────────────────────────────────┘
+```
 
 ### Frontend Technologies
-- **Framework**: React 19.1.1
-- **Build Tool**: Vite
-- **Styling**: Bootstrap 5.3.7
-- **Routing**: React Router DOM 7.8.0
-- **HTTP Client**: Axios 1.11.0
-- **Forms**: React Hook Form 7.62.0
-- **Validation**: Yup 1.7.0
-- **Notifications**: React Toastify 11.0.5
-- **QR Generation**: QRCode.react 4.2.0
+
+```
+┌─────────────────────────────────────┐
+│        Frontend Stack               │
+├─────────────────────────────────────┤
+│ Framework:    React 19.1.1          │
+│ Build:        Vite                  │
+│ Styling:      Bootstrap 5.3.7       │
+│ Routing:      React Router DOM      │
+│ HTTP:         Axios 1.11.0          │
+│ Forms:        React Hook Form       │
+│ Validation:   Yup 1.7.0             │
+│ Notifications: React Toastify       │
+│ QR:           QRCode.react 4.2.0    │
+└─────────────────────────────────────┘
+```
 
 ### External Integrations
-- **UEMOA QR Module**: Custom implementation for BCEAO compliance
-- **Payment System**: BCEAO Payment Interface integration
-- **Database**: PostgreSQL with Flyway migrations
+
+```
+┌─────────────────────────────────────┐
+│    External Integrations            │
+├─────────────────────────────────────┤
+│ UEMOA QR Module: BCEAO compliance   │
+│ Payment System: BCEAO Interface     │
+│ Database: PostgreSQL + Flyway       │
+└─────────────────────────────────────┘
+```
 
 ## Design Patterns Used
 
-1. **Layered Architecture**: Clear separation between presentation, business, and data layers
-2. **Repository Pattern**: Abstract data access layer
-3. **Service Layer Pattern**: Business logic encapsulation
-4. **DTO Pattern**: Data transfer object for API communication
-5. **Factory Pattern**: QR code generation based on type
-6. **Strategy Pattern**: Different authentication strategies
-7. **Observer Pattern**: Event-driven architecture for notifications
-
-## Performance Considerations
-
-- **Database Indexing**: Optimized queries with proper indexing
-- **Connection Pooling**: HikariCP for efficient database connections
-- **Caching**: Application-level caching for frequently accessed data
-- **Lazy Loading**: JPA lazy loading for related entities
-- **Pagination**: Server-side pagination for large datasets
-- **Async Processing**: Asynchronous QR code generation
-- **CDN**: Static asset delivery optimization
-
-## Scalability Features
-
-- **Horizontal Scaling**: Stateless application design
-- **Database Sharding**: Potential for future database scaling
-- **Microservices Ready**: Modular architecture for service decomposition
-- **API Gateway**: Centralized API management
-- **Load Balancing**: Distributed request handling
-- **Caching Layer**: Redis integration ready
-- **Message Queue**: Asynchronous processing capabilities
+```
+┌─────────────────────────────────────┐
+│      Design Patterns                │
+├─────────────────────────────────────┤
+│ • Layered Architecture              │
+│ • Repository Pattern                │
+│ • Service Layer Pattern             │
+│ • DTO Pattern                       │
+│ • Factory Pattern                   │
+│ • Strategy Pattern                  │
+└─────────────────────────────────────┘
+```
