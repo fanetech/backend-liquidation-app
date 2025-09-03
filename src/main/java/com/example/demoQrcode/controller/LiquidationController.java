@@ -5,7 +5,6 @@ import com.example.demoQrcode.dto.QRGenerationResponse;
 import com.example.demoQrcode.dto.QRImageResponse;
 import com.example.demoQrcode.entity.Liquidation;
 import com.example.demoQrcode.entity.LiquidationStatus;
-import com.example.demoQrcode.service.LiquidationQRService;
 import com.example.demoQrcode.service.LiquidationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,6 @@ import java.util.Optional;
 public class LiquidationController {
 
     private final LiquidationService liquidationService;
-    private final LiquidationQRService liquidationQRService;
 
     // GET /api/liquidations (with filters)
     @GetMapping
@@ -113,83 +111,9 @@ public class LiquidationController {
     // ========================================
     // NOUVEAUX ENDPOINTS QR CODES
     // ========================================
-
-    /**
-     * POST /api/liquidations/{id}/generate-qr
-     * Génère un QR code pour une liquidation
-     */
-    @PostMapping("/{id}/generate-qr")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
-    public ResponseEntity<QRGenerationResponse> generateQR(
-            @PathVariable Long id,
-            @Valid @RequestBody QRGenerationRequest request
-    ) {
-        try {
-            log.info("Demande de génération de QR code pour la liquidation ID: {} avec le type: {}", id, request.getQrType());
-
-            // Récupération de la liquidation
-            Optional<Liquidation> liquidationOpt = liquidationService.get(id);
-            if (liquidationOpt.isEmpty()) {
-                log.warn("Liquidation non trouvée avec l'ID: {}", id);
-                return ResponseEntity.ok(QRGenerationResponse.notFound());
-            }
-
-            Liquidation liquidation = liquidationOpt.get();
-
-            // Génération du QR code selon le type demandé
-            Map<String, Object> qrData;
-            switch (request.getQrType().toUpperCase()) {
-                case "STATIC":
-                    qrData = liquidationQRService.generateStaticQRForLiquidation(liquidation);
-                    break;
-                case "DYNAMIC":
-                    String transactionRef = request.getTransactionReference() != null ? 
-                        request.getTransactionReference() : liquidationQRService.generateTransactionReference(liquidation);
-                    qrData = liquidationQRService.generateDynamicQRForLiquidation(liquidation, transactionRef);
-                    break;
-                case "P2P":
-                    String beneficiaryPhone = liquidation.getCustomer().getPhone();
-                    qrData = liquidationQRService.generateP2PQRForLiquidation(liquidation, beneficiaryPhone);
-                    break;
-                case "PENALTY":
-                    BigDecimal penaltyAmount = request.getPenaltyAmount() != null ? 
-                        request.getPenaltyAmount() : new BigDecimal("5000.00");
-                    qrData = liquidationQRService.generateQRWithPenalty(liquidation, penaltyAmount);
-                    break;
-                default:
-                    log.warn("Type de QR code non supporté: {}", request.getQrType());
-                    return ResponseEntity.ok(QRGenerationResponse.validationError("Type de QR code non supporté: " + request.getQrType()));
-            }
-
-            // Construction de la réponse
-            QRGenerationResponse response = QRGenerationResponse.builder()
-                    .success(true)
-                    .message("QR code " + request.getQrType() + " généré avec succès")
-                    .qrCode((String) qrData.get("qrCode"))
-                    .qrType(request.getQrType())
-                    .liquidationId(id)
-                    .customerName((String) qrData.get("customerName"))
-                    .amount((BigDecimal) qrData.get("amount"))
-                    .penaltyAmount((BigDecimal) qrData.get("penaltyAmount"))
-                    .totalAmount((BigDecimal) qrData.get("totalAmount"))
-                    .currency((String) qrData.get("currency"))
-                    .taxType((String) qrData.get("taxType"))
-                    .transactionId((String) qrData.get("transactionId"))
-                    .merchantChannel((String) qrData.get("merchantChannel"))
-                    .generatedAt((java.time.LocalDateTime) qrData.get("generatedAt"))
-                    .build();
-
-            log.info("QR code généré avec succès pour la liquidation ID: {}", id);
-            return ResponseEntity.ok(response);
-
-        } catch (IllegalArgumentException e) {
-            log.warn("Erreur de validation pour la liquidation ID: {}: {}", id, e.getMessage());
-            return ResponseEntity.ok(QRGenerationResponse.validationError(e.getMessage()));
-        } catch (Exception e) {
-            log.error("Erreur lors de la génération du QR code pour la liquidation ID: {}: {}", id, e.getMessage(), e);
-            return ResponseEntity.ok(QRGenerationResponse.error(e.getMessage()));
-        }
-    }
+    // ENDPOINTS QR CODES SUPPRIMÉS - REMPLACÉS PAR LE WORKFLOW UEMOA
+    // Utilisez /api/uemoa-workflow/generate pour la génération de QR codes
+    // ========================================
 
     /**
      * GET /api/liquidations/{id}/qr-image
@@ -233,94 +157,9 @@ public class LiquidationController {
         }
     }
 
-    /**
-     * PUT /api/liquidations/{id}/regenerate-qr
-     * Régénère un QR code pour une liquidation
-     */
-    @PutMapping("/{id}/regenerate-qr")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
-    public ResponseEntity<QRGenerationResponse> regenerateQR(
-            @PathVariable Long id,
-            @Valid @RequestBody QRGenerationRequest request
-    ) {
-        try {
-            log.info("Demande de régénération de QR code pour la liquidation ID: {} avec le type: {}", id, request.getQrType());
-
-            // Récupération de la liquidation
-            Optional<Liquidation> liquidationOpt = liquidationService.get(id);
-            if (liquidationOpt.isEmpty()) {
-                log.warn("Liquidation non trouvée avec l'ID: {}", id);
-                return ResponseEntity.ok(QRGenerationResponse.notFound());
-            }
-
-            Liquidation liquidation = liquidationOpt.get();
-
-            // Suppression de l'ancien QR code (optionnel, car il sera écrasé)
-            liquidation.setQrCodeData(null);
-            liquidation.setQrImageBase64(null);
-            liquidation.setQrType(null);
-            liquidation.setQrGeneratedAt(null);
-            liquidation.setTransactionId(null);
-            liquidation.setMerchantChannel(null);
-            liquidation.setPenaltyAmount(null);
-            liquidation.setTotalAmount(null);
-
-            // Sauvegarde de la liquidation sans QR code
-            liquidationService.update(id, liquidation);
-
-            // Génération du nouveau QR code selon le type demandé
-            Map<String, Object> qrData;
-            switch (request.getQrType().toUpperCase()) {
-                case "STATIC":
-                    qrData = liquidationQRService.generateStaticQRForLiquidation(liquidation);
-                    break;
-                case "DYNAMIC":
-                    String transactionRef = request.getTransactionReference() != null ? 
-                        request.getTransactionReference() : liquidationQRService.generateTransactionReference(liquidation);
-                    qrData = liquidationQRService.generateDynamicQRForLiquidation(liquidation, transactionRef);
-                    break;
-                case "P2P":
-                    String beneficiaryPhone = liquidation.getCustomer().getPhone();
-                    qrData = liquidationQRService.generateP2PQRForLiquidation(liquidation, beneficiaryPhone);
-                    break;
-                case "PENALTY":
-                    BigDecimal penaltyAmount = request.getPenaltyAmount() != null ? 
-                        request.getPenaltyAmount() : new BigDecimal("5000.00");
-                    qrData = liquidationQRService.generateQRWithPenalty(liquidation, penaltyAmount);
-                    break;
-                default:
-                    log.warn("Type de QR code non supporté: {}", request.getQrType());
-                    return ResponseEntity.ok(QRGenerationResponse.validationError("Type de QR code non supporté: " + request.getQrType()));
-            }
-
-            // Construction de la réponse
-            QRGenerationResponse response = QRGenerationResponse.builder()
-                    .success(true)
-                    .message("QR code " + request.getQrType() + " régénéré avec succès")
-                    .qrCode((String) qrData.get("qrCode"))
-                    .qrType(request.getQrType())
-                    .liquidationId(id)
-                    .customerName((String) qrData.get("customerName"))
-                    .amount((BigDecimal) qrData.get("amount"))
-                    .penaltyAmount((BigDecimal) qrData.get("penaltyAmount"))
-                    .totalAmount((BigDecimal) qrData.get("totalAmount"))
-                    .currency((String) qrData.get("currency"))
-                    .taxType((String) qrData.get("taxType"))
-                    .transactionId((String) qrData.get("transactionId"))
-                    .merchantChannel((String) qrData.get("merchantChannel"))
-                    .generatedAt((java.time.LocalDateTime) qrData.get("generatedAt"))
-                    .build();
-
-            log.info("QR code régénéré avec succès pour la liquidation ID: {}", id);
-            return ResponseEntity.ok(response);
-
-        } catch (IllegalArgumentException e) {
-            log.warn("Erreur de validation pour la liquidation ID: {}: {}", id, e.getMessage());
-            return ResponseEntity.ok(QRGenerationResponse.validationError(e.getMessage()));
-        } catch (Exception e) {
-            log.error("Erreur lors de la régénération du QR code pour la liquidation ID: {}: {}", id, e.getMessage(), e);
-            return ResponseEntity.ok(QRGenerationResponse.error(e.getMessage()));
-        }
-    }
+    // ========================================
+    // ENDPOINTS QR CODES SUPPRIMÉS - REMPLACÉS PAR LE WORKFLOW UEMOA
+    // Utilisez /api/uemoa-workflow/generate pour la génération de QR codes
+    // ========================================
 }
 
